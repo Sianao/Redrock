@@ -12,7 +12,7 @@ import (
 var DB *gorm.DB
 
 func SqlInit() {
-	db, err := gorm.Open(mysql.Open("sia:sianao2002@tcp(127.0.0.1:3306)/tmpsql?charset=utf8mb4&parseTime=True&loc=Local"), &gorm.Config{
+	db, err := gorm.Open(mysql.Open("sia:sianao2002@tcp(110.42.216.125:3306)/Redrock?charset=utf8mb4&parseTime=True&loc=Local"), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		}})
@@ -25,7 +25,7 @@ func SqlInit() {
 var RedisPool *redis.Pool
 
 func PoolInitRedis() *redis.Pool {
-	server := "localhost:6379"
+	server := "110.42.216.125:6379"
 	password := ""
 	redisPool := &redis.Pool{
 		MaxIdle:     4, //空闲数

@@ -1,8 +1,10 @@
 package models
 
 type Userinfo struct {
-	Username string `form:"username," gorm:"username"`
-	Nickname string `form:"nickname," gorm:"nickname"`
-	Password string `form:"password," gorm:"password"`
-	QQClient string `form:"qq_client" gorm:"qqclient"`
+	Uid      int
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Nickname string `json:"Nickname,omitempty" gorm:"nickname"`
+	Sex      string `json:"Sex,omitempty" gorm:"sex"`
+	Age      int32  `json:"Age,omitempty" gorm:"age"`
 }

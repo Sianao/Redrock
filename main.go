@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Redrock/api"
 	"Redrock/controller"
 	"Redrock/dao"
 )
@@ -8,5 +9,6 @@ import (
 func main() {
 	dao.SqlInit()
 	dao.PoolInitRedis()
+	api.Init()
 	controller.Entrance()
 }
