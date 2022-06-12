@@ -171,7 +171,14 @@ func (r *Room) Game() {
 	for {
 		r.Client[0].con.WriteMessage(websocket.TextMessage, []byte(string(s)))
 		_, msg, _ := r.Client[0].con.ReadMessage()
+
 		for {
+			if strings.HasPrefix(string(msg), "msg") {
+				chatmsg := strings.TrimPrefix(string(msg), "msg")
+				r.Client[1].con.WriteMessage(websocket.TextMessage, []byte(chatmsg))
+				_, msg, _ = r.Client[0].con.ReadMessage()
+				continue
+			}
 			//判断用户直到输入正确信息
 			ok, err := r.Junge(msg, 0)
 			if err == nil {
@@ -194,11 +201,20 @@ func (r *Room) Game() {
 		r.Msg <- string(s)
 		r.Client[1].con.WriteMessage(websocket.TextMessage, []byte(string(s)))
 		_, msg, _ = r.Client[1].con.ReadMessage()
+
 		for {
+			if strings.HasPrefix(string(msg), "msg") {
+				chatmsg := strings.TrimPrefix(string(msg), "msg")
+				r.Client[0].con.WriteMessage(websocket.TextMessage, []byte(chatmsg))
+				_, msg, _ = r.Client[1].con.ReadMessage()
+				continue
+
+			}
 			ok, err := r.Junge(msg, 1)
 			if err == nil {
 				break
 			}
+
 			if err == nil {
 				break
 			}
