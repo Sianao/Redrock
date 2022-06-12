@@ -39,6 +39,7 @@ func (c *Client) Watch() {
 	}
 	c.con.WriteMessage(websocket.TextMessage, room)
 	_, m, _ := c.con.ReadMessage()
+	go c.Chat(string(m))
 	On.Room[string(m)].Watcher = append(On.Room[string(m)].Watcher, c)
 }
 func (c *Client) Enter() {
@@ -227,6 +228,17 @@ func (r *Room) Broad() {
 			}
 
 		}
+	}
+
+}
+func (c *Client) Chat(msgs string) {
+
+	for {
+		_, msg, err := c.con.ReadMessage()
+		if err != nil {
+		}
+		On.Room[msgs].Msg <- string(msg)
+
 	}
 
 }
