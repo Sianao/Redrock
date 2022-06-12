@@ -1,8 +1,14 @@
 # Redrock
 象棋客户端实现
 ##  采用 websocket 通过客户端与服务端建立连接实现通信
-~~~go
+```go
 注册 /register  
+注册所需参数 username password json格式化后  
+通过建立websocket 实现注册
+```
+
+~~~go
+
 登录 /login
  // 额 由于那个客户端太折磨人了 所以 在测试的时候
  // 除开服务端给出的指令外 移动棋子 按照 从第一行为 0 第一列为 0 进行标记 
@@ -15,5 +21,9 @@
  // 环境 的话 就用了个mysql redis 也没用上 那个将军将死的时候的判断有问题
  // 什么 docker grpc  一点没用上
  // (属实是我太垃圾了)
+~~~
+Docker构建
+~~~go
+docker run -d --name chess -p 9000:9000 sianao/chess
 ~~~
 <img src="./utils/img.png" alt="li"/>
