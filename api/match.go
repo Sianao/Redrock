@@ -2,7 +2,6 @@ package api
 
 import (
 	"Redrock/models"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/gorilla/websocket"
@@ -128,10 +127,6 @@ func (r *Room) Game() {
 	// 发送心跳 开始游戏
 	r.Client[0].con.WriteMessage(websocket.PingMessage, nil)
 	r.Client[1].con.WriteMessage(websocket.PingMessage, nil)
-	//var re models.Response
-	//re.State = 1
-	//re.Msg = string(s)
-	//b, _ := json.Marshal(&re)
 
 	r.Client[0].con.WriteMessage(websocket.TextMessage, []byte(string(s)))
 	r.Client[1].con.WriteMessage(websocket.TextMessage, []byte(string(s)))
@@ -139,9 +134,7 @@ func (r *Room) Game() {
 	//r.Client[0].Fal = false
 	r.Client[0].Room = r
 	r.Client[1].Room = r
-	//r.Client[1].Fal = true
-	//go r.Client[0].ReadMsg()
-	//go r.Client[1].ReadMsg()
+
 	for {
 		r.Client[0].con.WriteMessage(websocket.TextMessage, []byte(string(s)))
 		_, msg, _ := r.Client[0].con.ReadMessage()
@@ -176,59 +169,6 @@ func (r *Room) Game() {
 	}
 }
 
-func (c *Client) ReadMsg() {
-	for {
-		_, msg, _ := c.con.ReadMessage()
-		var re models.Response
-		json.Unmarshal(msg, &re)
-		// 聊天消息 直接写过去
-		if re.State == 1 {
-
-			c.Competition.con.WriteMessage(websocket.TextMessage, msg)
-		}
-		//走的消息
-		if re.State == 2 {
-			if c.Fal == false {
-				err := c.Room.Junge([]byte(re.Msg), 1)
-				if err != nil {
-					var r models.Response
-					r.State = -1
-					r.Msg = err.Error()
-					b, _ := json.Marshal(&r)
-					c.con.WriteMessage(websocket.TextMessage, b)
-				} else {
-					s := c.Room.ReturnDate(c.Room.Info)
-					re.State = 1
-					re.Msg = string(s)
-					m, _ := json.Marshal(&re)
-					c.Competition.con.WriteMessage(websocket.TextMessage, m)
-					c.Fal = true
-					c.Competition.Fal = false
-				}
-			} else {
-				re.State = -1
-				re.Msg = "没轮到你"
-				b, _ := json.Marshal(&re)
-				c.con.WriteMessage(websocket.TextMessage, b)
-			}
-		}
-		// 认输消息
-		if re.State == 3 {
-			re.State = 4
-			re.Msg = "你赢了"
-			b, _ := json.Marshal(&re)
-			return
-			c.Competition.con.WriteMessage(websocket.TextMessage, b)
-
-		}
-		if re.State == 4 {
-			return
-		}
-	}
-}
-func (c *Client) WriteMsg() {
-
-}
 func (r *Room) ReturnDate(m [][]rune) []rune {
 	var s []rune
 	for _, v := range m {
@@ -395,7 +335,7 @@ func ChessTable() [][]rune {
 }
 
 //  通过对该步骤判断是否将死
-// 自救
+// 自救 拜托 真的写不粗来
 
 func Move(che int, r *Room) bool {
 	op := 1 - che
