@@ -9,7 +9,7 @@ import (
 
 var menu = "1,新建房间\n" +
 	"2,加入房间\n" +
-	"3,查看信息\n" +
+	"3,观战\n" +
 	"4,退出"
 
 func (c *Client) Menu() error {
@@ -36,6 +36,7 @@ func (c *Client) Menu() error {
 		c.Enter()
 		break
 	case byte('3'):
+		c.Watch()
 		break
 	case byte('4'):
 		c.con.Close()

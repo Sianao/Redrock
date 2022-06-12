@@ -17,6 +17,7 @@ func (c *Client) NMatches() {
 	fmt.Println(t)
 	room := &Room{
 		Rid: strconv.Itoa(int(t)),
+		Msg: make(chan string),
 	}
 	room.Client = append(room.Client, c)
 	// 将房间加入到全局
@@ -27,7 +28,19 @@ func (c *Client) NMatches() {
 	room.Competition()
 	return
 }
+func (c *Client) Watch() {
+	var room []byte
+	room = append(room, []byte("在线的房间\n")...)
 
+	for k, v := range On.Room {
+		if len(v.Client) == 2 {
+			room = append(room, []byte(k+"\n")...)
+		}
+	}
+	c.con.WriteMessage(websocket.TextMessage, room)
+	_, m, _ := c.con.ReadMessage()
+	On.Room[string(m)].Watcher = append(On.Room[string(m)].Watcher, c)
+}
 func (c *Client) Enter() {
 	s := "1,输入房间号\n" +
 		"2,自由匹配\n" +
@@ -153,7 +166,7 @@ func (r *Room) Game() {
 	//r.Client[0].Fal = false
 	r.Client[0].Room = r
 	r.Client[1].Room = r
-
+	go r.Broad()
 	for {
 		r.Client[0].con.WriteMessage(websocket.TextMessage, []byte(string(s)))
 		_, msg, _ := r.Client[0].con.ReadMessage()
@@ -177,6 +190,7 @@ func (r *Room) Game() {
 		//	s = []rune("你输了")
 		//}
 		fmt.Println(s, string(m[0][0]))
+		r.Msg <- string(s)
 		r.Client[1].con.WriteMessage(websocket.TextMessage, []byte(string(s)))
 		_, msg, _ = r.Client[1].con.ReadMessage()
 		for {
@@ -197,9 +211,25 @@ func (r *Room) Game() {
 		//b, _ = WinOr(1, r)
 
 		s = r.ReturnDate(m)
+		r.Msg <- string(s)
+
 	}
 }
 
+func (r *Room) Broad() {
+	for {
+		select {
+		case msg, ok := <-r.Msg:
+			if ok {
+				for _, v := range r.Watcher {
+					v.con.WriteMessage(websocket.TextMessage, []byte(msg))
+				}
+			}
+
+		}
+	}
+
+}
 func (r *Room) ReturnDate(m [][]rune) []rune {
 	var s []rune
 	for _, v := range m {

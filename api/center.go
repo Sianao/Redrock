@@ -41,6 +41,7 @@ type Room struct {
 	Jia    [2][2]int
 	Client []*Client
 	//room id
-	Rid    string
-	Signal int
+	Rid     string
+	Watcher []*Client
+	Signal  int
 }
