@@ -253,18 +253,7 @@ func (r *Room) Junge(msg []byte, che int) error {
 	return nil
 }
 func (r *Room) IsMy(step [4]int, che int) (string, error) {
-	if step[0] > 8 || step[0] < 0 {
-		return "", errors.New("cuowu")
-	}
-	if step[2] > 8 || step[2] < 0 {
-		return "", errors.New("cuowu")
-	}
-	if step[1] > 9 || step[1] < 0 {
-		return "", errors.New("cuowu")
-	}
-	if step[3] > 9 || step[3] < 0 {
-		return "", errors.New("cuowu")
-	}
+
 	// 判断是否动了别人的棋子 以及是否输入的是空格
 	if r.Table[step[0]][step[1]].state != che || r.Table[step[0]][step[1]].T == models.Kong {
 		if r.Table[step[0]][step[1]].T == models.Kong {
