@@ -24,7 +24,8 @@ func (c *Client) NMatches() {
 
 	msg := []byte("房间号是" + strconv.Itoa(int(t)))
 	c.con.WriteMessage(websocket.TextMessage, msg)
-	go room.Competition()
+	room.Competition()
+	return
 }
 
 func (c *Client) Enter() {
@@ -81,6 +82,7 @@ func (r *Room) Competition() {
 	//开始对决
 	//据说需要进行准备是吧
 	r.Ready()
+	return
 
 }
 
@@ -110,6 +112,7 @@ func (r *Room) Ready() {
 		}
 	}
 	r.Game()
+	return
 
 }
 
@@ -140,9 +143,14 @@ func (r *Room) Game() {
 		_, msg, _ := r.Client[0].con.ReadMessage()
 		for {
 			//判断用户直到输入正确信息
-			err := r.Junge(msg, 0)
+			ok, err := r.Junge(msg, 0)
 			if err == nil {
 				break
+			}
+			if ok {
+				r.Client[0].con.WriteMessage(websocket.TextMessage, []byte("你赢了"))
+				r.Client[1].con.WriteMessage(websocket.TextMessage, []byte("你输了"))
+				return
 			}
 			r.Client[0].con.WriteMessage(websocket.TextMessage, []byte(err.Error()))
 			_, msg, _ = r.Client[0].con.ReadMessage()
@@ -156,9 +164,16 @@ func (r *Room) Game() {
 		r.Client[1].con.WriteMessage(websocket.TextMessage, []byte(string(s)))
 		_, msg, _ = r.Client[1].con.ReadMessage()
 		for {
-			err := r.Junge(msg, 1)
+			ok, err := r.Junge(msg, 1)
 			if err == nil {
 				break
+			}
+			if err == nil {
+				break
+			}
+			if ok {
+				r.Client[0].con.WriteMessage(websocket.TextMessage, []byte("你输了"))
+				r.Client[1].con.WriteMessage(websocket.TextMessage, []byte("你赢了"))
 			}
 			r.Client[1].con.WriteMessage(websocket.TextMessage, []byte(err.Error()))
 			_, msg, _ = r.Client[1].con.ReadMessage()
@@ -176,7 +191,7 @@ func (r *Room) ReturnDate(m [][]rune) []rune {
 	}
 	return s
 }
-func (r *Room) Junge(msg []byte, che int) error {
+func (r *Room) Junge(msg []byte, che int) (bool, error) {
 	var s [4]int
 	m := strings.Split(string(msg), " ")
 	fmt.Println(len(m), "len")
@@ -186,11 +201,16 @@ func (r *Room) Junge(msg []byte, che int) error {
 
 	_, err := r.IsMy(s, che)
 	if err != nil {
-		return err
+		return false, err
 	}
 	fmt.Println(s, "int")
-
-	return nil
+	var ok bool
+	// 判断是否吃到将
+	if r.Table[s[2]][s[3]].state != che && r.Table[s[2]][s[3]].state == models.Jiang {
+		ok = true
+	}
+	ok = false
+	return ok, nil
 }
 func (r *Room) IsMy(step [4]int, che int) (string, error) {
 
