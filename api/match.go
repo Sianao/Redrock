@@ -41,6 +41,7 @@ func (c *Client) Enter() {
 		c.EnterRoom()
 		break
 	case byte('2'):
+		c.RandomMatch()
 		break
 	case 3:
 		break
@@ -48,6 +49,21 @@ func (c *Client) Enter() {
 	}
 }
 
+//随机加入房间
+
+func (c *Client) RandomMatch() {
+
+	for k, v := range On.Room {
+		if len(v.Client) == 1 {
+			v.Client = append(v.Client, c)
+			// 对手信息相互加入
+			v.Client[0].Competition = c
+			c.Competition = v.Client[0]
+			c.con.WriteMessage(websocket.TextMessage, []byte("你加入了 "+k+"房间"))
+			fmt.Println("算是进入房间了")
+		}
+	}
+}
 func (c *Client) EnterRoom() {
 	err := c.con.WriteMessage(websocket.TextMessage, []byte("请输入房间号"))
 	if err != nil {
