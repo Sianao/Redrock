@@ -25,7 +25,7 @@ func SqlInit() {
 var RedisPool *redis.Pool
 
 func PoolInitRedis() *redis.Pool {
-	server := "110.42.216.125:6379"
+	server := "localhost:6379"
 	password := ""
 	redisPool := &redis.Pool{
 		MaxIdle:     4, //空闲数
@@ -42,7 +42,7 @@ func PoolInitRedis() *redis.Pool {
 					return nil, err
 				}
 			}
-			return c, err
+			return nil, err
 		},
 	}
 	RedisPool = redisPool

@@ -1,15 +1,19 @@
 package dao
 
-import "github.com/gomodule/redigo/redis"
+import (
+	"github.com/gomodule/redigo/redis"
+	"log"
+)
 
 func NewRoom(rid int, nick string) error {
 	con := RedisPool.Get()
 	defer con.Close()
-	_, err := redis.String(con.Do("sadd", rid, nick))
-
+	do, err := con.Do("SADD", rid, nick)
 	if err != nil {
-		return err
+		log.Println(err)
+
 	}
-	return nil
+	_, err = redis.String(do, err)
+	return err
 
 }
