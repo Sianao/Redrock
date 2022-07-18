@@ -18,7 +18,7 @@ func (r *Room) Bing(s [4]int, che int) error {
 			return errors.New("你怎么能回头呢")
 		}
 		if s[0] <= 4 && s[1] != s[3] {
-			return errors.New("没有过河 不能走")
+			return errors.New("没有过河 不能直走")
 		}
 	} else {
 		if s[2] > s[0] {

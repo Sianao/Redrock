@@ -157,10 +157,6 @@ func (r *Room) Game() {
 	table := NewLogic(m)
 	//开始对局
 	r.Table = table
-	// 发送心跳 开始游戏
-	r.Client[0].con.WriteMessage(websocket.PingMessage, nil)
-	r.Client[1].con.WriteMessage(websocket.PingMessage, nil)
-
 	r.Client[0].con.WriteMessage(websocket.TextMessage, []byte(string(s)))
 	r.Client[1].con.WriteMessage(websocket.TextMessage, []byte(string(s)))
 	//
@@ -171,7 +167,6 @@ func (r *Room) Game() {
 	for {
 		r.Client[0].con.WriteMessage(websocket.TextMessage, []byte(string(s)))
 		_, msg, _ := r.Client[0].con.ReadMessage()
-
 		for {
 			if strings.HasPrefix(string(msg), "msg") {
 				chatmsg := strings.TrimPrefix(string(msg), "msg")
@@ -211,10 +206,6 @@ func (r *Room) Game() {
 
 			}
 			ok, err := r.Junge(msg, 1)
-			if err == nil {
-				break
-			}
-
 			if err == nil {
 				break
 			}
@@ -313,7 +304,6 @@ func (r *Room) IsMy(step [4]int, che int) (string, error) {
 	//判断走位是否符合逻辑
 	switch r.Table[step[0]][step[1]].T {
 	case models.Che:
-		fmt.Println("Che\n\n")
 		err := r.Che(step)
 		if err != nil {
 			return "", err
@@ -324,9 +314,7 @@ func (r *Room) IsMy(step [4]int, che int) (string, error) {
 		r.Table[step[2]][step[3]].state = che
 		r.Table[step[2]][step[3]].T = models.Che
 		r.Table[step[0]][step[1]].T = models.Kong
-		fmt.Println("hello")
 	case models.Ma:
-		fmt.Println("Ma\n\n")
 		err := r.Ma(step)
 		if err != nil {
 			return "", err
@@ -338,7 +326,6 @@ func (r *Room) IsMy(step [4]int, che int) (string, error) {
 		r.Table[step[0]][step[1]].T = models.Kong
 
 	case models.Xian:
-		fmt.Println("Xian \n\n")
 		err := r.Xian(step)
 		if err != nil {
 			return "", err
@@ -349,7 +336,6 @@ func (r *Room) IsMy(step [4]int, che int) (string, error) {
 		r.Table[step[2]][step[3]].T = models.Xian
 		r.Table[step[0]][step[1]].T = models.Kong
 	case models.Shi:
-		fmt.Println("Shi \n\n")
 		err := r.Shi(step)
 		if err != nil {
 			return "", err
@@ -360,7 +346,6 @@ func (r *Room) IsMy(step [4]int, che int) (string, error) {
 		r.Table[step[2]][step[3]].T = models.Shi
 		r.Table[step[0]][step[1]].T = models.Kong
 	case models.Jiang:
-		fmt.Println("Jiang \n\n")
 		err := r.Jiang(step)
 		if err != nil {
 			return "", err
@@ -371,7 +356,6 @@ func (r *Room) IsMy(step [4]int, che int) (string, error) {
 		r.Table[step[2]][step[3]].T = models.Jiang
 		r.Table[step[0]][step[1]].T = models.Kong
 	case models.Pao:
-		fmt.Println("Pao \n\n")
 		_, err := r.Pao(step)
 		if err != nil {
 			return "", err
@@ -383,7 +367,6 @@ func (r *Room) IsMy(step [4]int, che int) (string, error) {
 		r.Table[step[2]][step[3]].T = models.Pao
 		r.Table[step[0]][step[1]].T = models.Kong
 	case models.Bing:
-		fmt.Println("Bing \n\n")
 		err := r.Bing(step, che)
 		if err != nil {
 			return "", err

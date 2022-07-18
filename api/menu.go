@@ -7,10 +7,17 @@ import (
 	"strconv"
 )
 
-var menu = "1,新建房间\n" +
+const menu = "1,新建房间\n" +
 	"2,加入房间\n" +
 	"3,观战\n" +
 	"4,退出"
+
+var (
+	ChooseNewMatch   = byte('1')
+	ChooseEnterMatch = byte('2')
+	ChooseWatchMatch = byte('3')
+	CHooseQuit       = byte('4')
+)
 
 func (c *Client) Menu() error {
 
@@ -29,16 +36,16 @@ func (c *Client) Menu() error {
 	}
 	choose := msg[0]
 	switch choose {
-	case byte('1'):
+	case ChooseNewMatch:
 		c.NMatches()
 		break
-	case byte('2'):
+	case ChooseEnterMatch:
 		c.Enter()
 		break
-	case byte('3'):
+	case ChooseWatchMatch:
 		c.Watch()
 		break
-	case byte('4'):
+	case CHooseQuit:
 		c.con.Close()
 		err := errors.New("退出")
 		return err
