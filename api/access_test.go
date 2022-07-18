@@ -24,16 +24,26 @@ func TestRoom_Che(t *testing.T) {
 	}
 }
 func TestRoom_Pao(t *testing.T) {
+	test := []struct {
+		step   [4]int
+		expect string
+	}{{[4]int{9, 2, 8, 2}, "你这炮不是意大利炮 不行"},
+		{[4]int{9, 2, 8, 0}, "你这炮不是意大利炮 不行"},
+		{[4]int{9, 2, 9, 0}, ""},
+		{[4]int{5, 2, 5, 1}, ""}}
 	m := ChessTable()
 	table := NewLogic(m)
 	var r Room
 	r.Info = m
 	r.Table = table
-	if err := r.Che([4]int{0, 0, 1, 0}); err != nil {
-		t.Errorf("err %#v", err.Error())
+	for _, v := range test {
+		if _, err := r.Pao(v.step); err != nil && err.Error() != v.expect {
+			t.Errorf("err %#v", err.Error())
+		}
 	}
 }
 func TestRoom_Ma(t *testing.T) {
+
 	m := ChessTable()
 	table := NewLogic(m)
 	var r Room

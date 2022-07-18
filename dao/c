@@ -1,0 +1,23 @@
+mode: set
+Redrock/dao/login.go:8.54,11.30 3 1
+Redrock/dao/login.go:15.2,15.40 1 1
+Redrock/dao/login.go:11.30,14.3 2 0
+Redrock/dao/login.go:15.40,18.3 1 1
+Redrock/dao/login.go:18.8,21.3 2 1
+Redrock/dao/register.go:8.52,10.25 2 1
+Redrock/dao/register.go:14.2,14.28 1 0
+Redrock/dao/register.go:10.25,13.3 2 1
+Redrock/dao/room.go:8.42,12.16 4 0
+Redrock/dao/room.go:16.2,17.12 2 0
+Redrock/dao/room.go:12.16,15.3 1 0
+Redrock/dao/sqlinit.go:14.16,19.16 2 1
+Redrock/dao/sqlinit.go:22.2,22.9 1 1
+Redrock/dao/sqlinit.go:19.16,21.3 1 0
+Redrock/dao/sqlinit.go:27.34,34.36 3 1
+Redrock/dao/sqlinit.go:48.2,49.18 2 1
+Redrock/dao/sqlinit.go:34.36,36.18 2 0
+Redrock/dao/sqlinit.go:39.4,39.22 1 0
+Redrock/dao/sqlinit.go:45.4,45.19 1 0
+Redrock/dao/sqlinit.go:36.18,38.5 1 0
+Redrock/dao/sqlinit.go:39.22,40.53 1 0
+Redrock/dao/sqlinit.go:40.53,43.6 2 0
